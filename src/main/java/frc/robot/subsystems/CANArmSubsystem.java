@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -9,70 +5,73 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.RobotState;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ArmConstants;
+import com.revrobotics.AbsoluteEncoder;
 
-// Class to drive the robot over CAN
-public class CANArmSubsystem extends SubsystemBase {
-  private final SparkMax leftFront;
-  private final SparkMax leftBack;
-  private final SparkMax rightFront;
-  private final SparkMax rightBack;
 
-  private final DifferentialDrive drive;
+public class CANArmSubsystem extends SubsystemBase{
+    //Neo's connected to the chassis, moves the arm(height) high - LongHost is the one with the long chain, needs negative power
+    private final SparkMax LongHost;
+    private final SparkMax ShortSlave;
+    // sset the Arm encoder (connected to LongHost)
+    private final AbsoluteEncoder ArmInitial;
 
-  public CANArmSubsystem() {
-    // create brushless motors for drive
-    leftFront = new SparkMax(DriveConstants.LEFT_LEADER_ID, MotorType.kBrushless);
-    leftBack = new SparkMax(DriveConstants.LEFT_FOLLOWER_ID, MotorType.kBrushless);
-    rightFront = new SparkMax(DriveConstants.RIGHT_LEADER_ID, MotorType.kBrushless);
-    rightBack = new SparkMax(DriveConstants.RIGHT_FOLLOWER_ID, MotorType.kBrushless);
+    private final PIDController ArmPID = new PIDController(ArmConstants.Arm_P, ArmConstants.Arm_I, ArmConstants.Arm_D);
 
-    // set up differential drive class
-    drive = new DifferentialDrive(leftFront, leftBack);
+        public CANArmSubsystem(){
+            //create motors for arm host movement
+            LongHost = new SparkMax(ArmConstants.Left_Back_ID, MotorType.kBrushless);
+            ShortSlave = new SparkMax(ArmConstants.Right_Back_ID,MotorType.kBrushless);
+            //create new encoder for arm movement
+            ArmInitial =  LongHost.getAbsoluteEncoder();
 
-    // Set can timeout. Because this project only sets parameters once on
-    // construction, the timeout can be long without blocking robot operation. Code
-    // which sets or gets parameters during operation may need a shorter timeout.
-    leftFront.setCANTimeout(250);
-    rightFront.setCANTimeout(250);
-    leftBack.setCANTimeout(250);
-    rightBack.setCANTimeout(250);
+            //Set Start CAN timeout,should(??????) only be called once, so a ong imeout is fine
+            LongHost.setCANTimeout(250);
+            ShortSlave.setCANTimeout(250);
 
-    // Create the configuration to apply to motors. Voltage compensation
-    // helps the robot perform more similarly on different
-    // battery voltages (at the cost of a little bit of top speed on a fully charged
-    // battery). The current limit helps prevent tripping
-    // breakers.
-    SparkMaxConfig config = new SparkMaxConfig();
-    config.voltageCompensation(12);
-    config.smartCurrentLimit(DriveConstants.DRIVE_MOTOR_CURRENT_LIMIT);
+            //set nominal voltage - 12v allows higher speed, less consistency
+            //we will try for 10 volts,  tis mean it will usually stay at ten, consistently
+            SparkMaxConfig config = new SparkMaxConfig();
+            config.voltageCompensation(ArmConstants.NOMINAL_VOLTAGE);
+            config.smartCurrentLimit(ArmConstants.CURRENT_LIMIT);
 
-    // Set configuration to follow leader and then apply it to corresponding
-    // follower. Resetting in case a new controller is swapped
-    // in and persisting in case of a controller reset due to breaker trip
-    config.follow(leftFront);
-    rightFront.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    config.follow(leftBack);
-    rightBack.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+            //set short slave to follow long host, but invert
+            config.follow(LongHost, true);
+            ShortSlave.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        }
+        // finds and sets the setpont for your arm movement
+        public void setArmGoal(double ArmGoal){
+            SmartDashboard.putNumber("Arm Position Demand", ArmGoal);
+            ArmPID.setSetpoint(ArmGoal);
+            
+        }
+        public double getCurrentArmPOS(){
+            return ArmInitial.getPosition();
 
-    // Remove following, then apply config to left leader
-    config.disableFollowerMode();
-    leftBack.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    // Set conifg to inverted and then apply to right leader. Set right side inverted
-    // so that postive values drive both sides forward
-    config.inverted(true);
-    rightFront.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    rightBack.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
+        }
 
-  @Override
-  public void periodic() {
-  }
 
-  // sets the speed of the drive motors
-  public void driveArcade(double xSpeed, double zRotation) {
-    drive.arcadeDrive(xSpeed, zRotation);
-  }
-}
+            @Override
+            public void periodic(){
+                double currentArmPOS = getCurrentArmPOS();
+                double armPower = ArmPID.calculate(currentArmPOS);
+                
+                SmartDashboard.putNumber("High Arm POS", currentArmPOS);
+                SmartDashboard.putNumber("High Arm Power", armPower);
+                if (RobotState.isEnabled()){
+                    LongHost.set(-armPower);
+                }
+
+
+            }
+
+
+
+
+        }

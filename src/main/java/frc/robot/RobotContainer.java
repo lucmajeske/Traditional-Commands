@@ -5,19 +5,25 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.RollerConstants;
 import frc.robot.Constants.ArmConstants;
+//import frc.robot.commands.setArmGoal;
+//import frc.robot.Constants.HeadConstants;
 import frc.robot.commands.AutoCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.RollerCommand;
 import frc.robot.subsystems.CANDriveSubsystem;
+//import frc.robot.subsystems.CANHeadPivotSubsystem;
 import frc.robot.subsystems.CANRollerSubsystem;
 import frc.robot.subsystems.CANArmSubsystem;
+//import frc.robot.subsystems.CANHeadPivotSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -33,6 +39,7 @@ public class RobotContainer {
   private final CANDriveSubsystem driveSubsystem = new CANDriveSubsystem();
   private final CANRollerSubsystem rollerSubsystem = new CANRollerSubsystem();
   private final CANArmSubsystem armSubsystem = new CANArmSubsystem();
+  //private final CANHeadPivotSubsystem headSubsystem = new CANHeadPivotSubsystem();
 
   // The driver's controller
   private final CommandXboxController driverController = new CommandXboxController(
@@ -73,13 +80,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Set the A button to run the "RollerCommand" command with a fixed
-    // value ejecting the gamepiece while the button is held
+  
 
     // before
-    operatorController.a()
-        .whileTrue(new RollerCommand(() -> RollerConstants.ROLLER_EJECT_VALUE, () -> 0, rollerSubsystem));
-
+    
     // Set the default command for the drive subsystem to an instance of the
     // DriveCommand with the values provided by the joystick axes on the driver
     // controller. The Y axis of the controller is inverted so that pushing the
@@ -88,7 +92,7 @@ public class RobotContainer {
     // joystick matches the WPILib convention of counter-clockwise positive
     driveSubsystem.setDefaultCommand(new DriveCommand(
         () -> -driverController.getLeftY() *
-            (driverController.getHID().getRightBumperButton() ? 1 : 0.5),
+           (driverController.getHID().getRightBumperButton() ? 1 : 0.5),
         () -> -driverController.getRightX(),
         driveSubsystem));
 
@@ -96,10 +100,25 @@ public class RobotContainer {
     // RollerCommand with the values provided by the triggers on the operator
     // controller
     rollerSubsystem.setDefaultCommand(new RollerCommand(
-        () -> operatorController.getRightTriggerAxis(),
         () -> operatorController.getLeftTriggerAxis(),
+        () -> operatorController.getRightTriggerAxis(),
         rollerSubsystem));
+
+        //set the armSubsystem to move on a normalized value of the joysticks
+   // armSubsystem.setDefaultCommand(new ArmCommand(
+   // () -> operatorController.getRightTriggerAxis(),
+   // () -> operatorController.getLeftTriggerAxis(),
+   // armSubsystem));
+
+ 
+      operatorController.button(1).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.01), armSubsystem));
+      operatorController.button(2).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.125), armSubsystem));
+      operatorController.button(3).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.25), armSubsystem));
+      operatorController.button(4).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.3), armSubsystem));
+    
+  
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

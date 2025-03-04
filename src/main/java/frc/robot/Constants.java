@@ -26,19 +26,28 @@ public final class Constants {
     public static final int DRIVE_MOTOR_CURRENT_LIMIT = 60;
   }
 
-  public static final class ArmConstants {
+  public static final class WristConstants {
     public static final int Left_Front_ID = 6;
-    public static final int Left_Front_CURRENT_LIMIT = 60;
-    public static final double Left_Front_VOLTAGE_COMP = 10;
-    public static final int Left_Back_ID = 7;
-    public static final int Left_Back_CURRENT_LIMIT = 60;
-    public static final double Left_Back_VOLTAGE_COMP = 10;
+    public static final int CURRENT_LIMIT = 60;
+    public static final double NOMINAL_VOLTAGE = 10;
     public static final int Right_Front_ID = 8;
-    public static final int Right_Front_CURRENT_LIMIT = 60;
-    public static final double Right_Front_VOLTAGE_COMP = 10;
+
+    //PID Constants 
+    public static final double Wrist_P = 0.0;
+    public static final double Wrist_I = 0.0;
+    public static final double Wrist_D = 0.0;
+  }
+  public static final class ArmConstants {
+  public static final int Left_Back_ID = 7;
+    public static final int CURRENT_LIMIT = 60;
+    public static final double NOMINAL_VOLTAGE = 10;
     public static final int Right_Back_ID = 9;
-    public static final int Right_Back_CURRENT_LIMIT = 60;
-    public static final double Right_Back_VOLTAGE_COMP = 10;
+
+   // public static final int Arm_Encoder_ID = 7;
+    // PID Constants
+    public static final double Arm_P = 2;
+    public static final double Arm_I = 0.01;
+    public static final double Arm_D = 0.25;
   } 
 
   public static final class RollerConstants {
