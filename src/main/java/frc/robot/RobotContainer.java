@@ -12,8 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.RollerConstants;
-import frc.robot.Constants.ArmConstants;
+
 //import frc.robot.commands.setArmGoal;
 //import frc.robot.Constants.HeadConstants;
 import frc.robot.commands.AutoCommand;
@@ -22,6 +21,7 @@ import frc.robot.commands.RollerCommand;
 import frc.robot.subsystems.CANDriveSubsystem;
 //import frc.robot.subsystems.CANHeadPivotSubsystem;
 import frc.robot.subsystems.CANRollerSubsystem;
+import frc.robot.subsystems.CANWristSubsystem;
 import frc.robot.subsystems.CANArmSubsystem;
 //import frc.robot.subsystems.CANHeadPivotSubsystem;
 
@@ -36,9 +36,10 @@ import frc.robot.subsystems.CANArmSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final CANDriveSubsystem driveSubsystem = new CANDriveSubsystem();
-  private final CANRollerSubsystem rollerSubsystem = new CANRollerSubsystem();
-  private final CANArmSubsystem armSubsystem = new CANArmSubsystem();
+  public final CANDriveSubsystem driveSubsystem = new CANDriveSubsystem();
+  public final CANRollerSubsystem rollerSubsystem = new CANRollerSubsystem();
+  public final CANArmSubsystem armSubsystem = new CANArmSubsystem();
+  public final CANWristSubsystem wristSubsystem = new CANWristSubsystem();
   //private final CANHeadPivotSubsystem headSubsystem = new CANHeadPivotSubsystem();
 
   // The driver's controller
@@ -100,8 +101,7 @@ public class RobotContainer {
     // RollerCommand with the values provided by the triggers on the operator
     // controller
     rollerSubsystem.setDefaultCommand(new RollerCommand(
-        () -> operatorController.getLeftTriggerAxis(),
-        () -> operatorController.getRightTriggerAxis(),
+        () -> 0.25 * (operatorController.getRightTriggerAxis() - operatorController.getLeftTriggerAxis()),
         rollerSubsystem));
 
         //set the armSubsystem to move on a normalized value of the joysticks
@@ -111,13 +111,16 @@ public class RobotContainer {
    // armSubsystem));
 
  
-      operatorController.button(1).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.01), armSubsystem));
-      operatorController.button(2).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.125), armSubsystem));
-      operatorController.button(3).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.25), armSubsystem));
-      operatorController.button(4).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.3), armSubsystem));
-    
-  
+      operatorController.button(1).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.05), armSubsystem));
+      operatorController.button(2).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.15), armSubsystem));
+      operatorController.button(3).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.225), armSubsystem));
+      operatorController.button(4).onTrue(Commands.runOnce(() -> armSubsystem.setArmGoal(0.4), armSubsystem));
+      operatorController.button(1).onTrue(Commands.runOnce(() -> wristSubsystem.setWristGoal(0.1), wristSubsystem));
+      operatorController.button(2).onTrue(Commands.runOnce(() -> wristSubsystem.setWristGoal(0.125), wristSubsystem));
+      operatorController.button(3).onTrue(Commands.runOnce(() -> wristSubsystem.setWristGoal(0.25), wristSubsystem));
+      operatorController.button(4).onTrue(Commands.runOnce(() -> wristSubsystem.setWristGoal(0.4), wristSubsystem));
   }
+
 
 
   /**

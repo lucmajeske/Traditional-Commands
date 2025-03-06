@@ -9,6 +9,9 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.CANArmSubsystem;
+import frc.robot.subsystems.CANWristSubsystem;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -35,7 +38,7 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
+    
     // Used to track usage of the KitBot code, please do not remove
     HAL.report(tResourceType.kResourceType_Framework, 9);
   }
@@ -83,6 +86,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    // Set arm/wrist to initially hold still;
+    m_robotContainer.armSubsystem.setArmGoal(m_robotContainer.armSubsystem.getCurrentArmPOS());
+    m_robotContainer.wristSubsystem.setWristGoal(m_robotContainer.wristSubsystem.getCurrentWristPOS());
   }
 
   /** This function is called periodically during autonomous. */
@@ -99,6 +106,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    // Set arm/wrist to initially hold still;
+    m_robotContainer.armSubsystem.setArmGoal(m_robotContainer.armSubsystem.getCurrentArmPOS());
+    m_robotContainer.wristSubsystem.setWristGoal(m_robotContainer.wristSubsystem.getCurrentWristPOS());
   }
 
   /** This function is called periodically during operator control. */

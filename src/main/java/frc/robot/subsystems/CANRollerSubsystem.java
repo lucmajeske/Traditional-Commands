@@ -18,7 +18,7 @@ public class CANRollerSubsystem extends SubsystemBase {
 
   public CANRollerSubsystem() {
     // Set up the roller motor as a brushless motor
-    rollerMotor = new SparkMax(RollerConstants.ROLLER_MOTOR_ID, MotorType.kBrushed);
+    rollerMotor = new SparkMax(RollerConstants.ROLLER_MOTOR_ID, MotorType.kBrushless);
 
     // Set can timeout. Because this project only sets parameters once on
     // construction, the timeout can be long without blocking robot operation. Code
@@ -40,7 +40,7 @@ public class CANRollerSubsystem extends SubsystemBase {
   }
 
   /** This is a method that makes the roller spin */
-  public void runRoller(double forward, double reverse) {
-    rollerMotor.set(forward - reverse);
+  public void runRoller(double power) {
+    rollerMotor.set(power);
   }
 }
