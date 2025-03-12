@@ -14,33 +14,29 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 /** Class to run the rollers over CAN */
 public class CANRollerSubsystem extends SubsystemBase {
-  private final SparkMax rollerMotor;
+    private final SparkMax rollerMotor;
 
-  public CANRollerSubsystem() {
-    // Set up the roller motor as a brushless motor
-    rollerMotor = new SparkMax(RollerConstants.ROLLER_MOTOR_ID, MotorType.kBrushless);
+    public CANRollerSubsystem() {
+        // Set up the roller motor as a brushless motor
+        rollerMotor = new SparkMax(RollerConstants.ROLLER_MOTOR_ID, MotorType.kBrushless);
 
-    // Set can timeout. Because this project only sets parameters once on
-    // construction, the timeout can be long without blocking robot operation. Code
-    // which sets or gets parameters during operation may need a shorter timeout.
-    rollerMotor.setCANTimeout(250);
+        // Set can timeout. Because this project only sets parameters once on
+        // construction, the timeout can be long without blocking robot operation. Code
+        // which sets or gets parameters during operation may need a shorter timeout.
+        rollerMotor.setCANTimeout(250);
 
-    // Create and apply configuration for roller motor. Voltage compensation helps
-    // the roller behave the same as the battery
-    // voltage dips. The current limit helps prevent breaker trips or burning out
-    // the motor in the event the roller stalls.
-    SparkMaxConfig rollerConfig = new SparkMaxConfig();
-    rollerConfig.voltageCompensation(RollerConstants.ROLLER_MOTOR_VOLTAGE_COMP);
-    rollerConfig.smartCurrentLimit(RollerConstants.ROLLER_MOTOR_CURRENT_LIMIT);
-    rollerMotor.configure(rollerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  }
+        // Create and apply configuration for roller motor. Voltage compensation helps
+        // the roller behave the same as the battery
+        // voltage dips. The current limit helps prevent breaker trips or burning out
+        // the motor in the event the roller stalls.
+        SparkMaxConfig rollerConfig = new SparkMaxConfig();
+        rollerConfig.voltageCompensation(RollerConstants.ROLLER_MOTOR_VOLTAGE_COMP);
+        rollerConfig.smartCurrentLimit(RollerConstants.ROLLER_MOTOR_CURRENT_LIMIT);
+        rollerMotor.configure(rollerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
 
-  @Override
-  public void periodic() {
-  }
-
-  /** This is a method that makes the roller spin */
-  public void runRoller(double power) {
-    rollerMotor.set(power);
-  }
+    /** This is a method that makes the roller spin */
+    public void runRoller(double power) {
+        rollerMotor.set(power);
+    }
 }
