@@ -37,14 +37,14 @@ public final class Constants {
 
     public static final class WristConstants {
         public static final double
-        GOAL_ONE_HOME = 0.0,
-        GOAL_TWO_INTAKE = 0.2331,
-        GOAL_THREE_ALGAE_DEPOSIT = 0.1034,
-        GOAL_FOUR_CORAL_LOW = 0.007,
-        GOAL_FIVE_CORAL_HIGH = 0.007,
-        GOAL_SIX_ALGAE_LOW = 0.1424,
-        GOAL_SEVEN_ALGAE_HIGH = 0.3357,
-        GOAL_EIGHT_BARGE_SHOOT = 0.2243;
+        GOAL_ONE_HOME = 5,
+        GOAL_TWO_INTAKE = 84,
+        GOAL_THREE_ALGAE_DEPOSIT = 36,
+        GOAL_FOUR_CORAL_LOW = 5,
+        GOAL_FIVE_CORAL_HIGH = 5,
+        GOAL_SIX_ALGAE_LOW = 45,
+        GOAL_SEVEN_ALGAE_HIGH = 110,
+        GOAL_EIGHT_BARGE_SHOOT = 75;
             
         
 
@@ -54,8 +54,8 @@ public final class Constants {
         public static final int Right_Front_ID = 8;
 
         // PID Constants 
-        public static final double Wrist_P = 0; //5.25
-        public static final double Wrist_I = 0; //0.25
+        public static final double Wrist_P = .00; //5.25
+        public static final double Wrist_I = 0.0; //0.25
         public static final double Wrist_D = 0; //1.25
     }
     public static final class ArmConstants {
@@ -66,19 +66,19 @@ public final class Constants {
 
         // public static final int Arm_Encoder_ID = 7;
         // PID Constants
-        public static final double Arm_P = 20.0; //5.0
+        public static final double Arm_P = 0.0; //5.0 // 0.045
         public static final double Arm_I = 0; //0.75
-        public static final double Arm_D = 0; //0.75
+        public static final double Arm_D = 0.0; //0.75 // 0.0025
 
         public static final double
-            GOAL_ONE_HOME = 0.0,
-            GOAL_TWO_INTAKE = 0.0185,
-            GOAL_THREE_ALGAE_DEPOSIT = 0.0068,
-            GOAL_FOUR_CORAL_LOW = 0.0966,
-            GOAL_FIVE_CORAL_HIGH = 0.1307,
-            GOAL_SIX_ALGAE_LOW = 0.0878,
-            GOAL_SEVEN_ALGAE_HIGH = 0.2318,
-            GOAL_EIGHT_BARGE_SHOOT = 0.2958;
+            GOAL_ONE_HOME = 3.6,
+            GOAL_TWO_INTAKE = 3.6,
+            GOAL_THREE_ALGAE_DEPOSIT = 3.6,
+            GOAL_FOUR_CORAL_LOW = 45, //+40
+            GOAL_FIVE_CORAL_HIGH = 68,
+            GOAL_SIX_ALGAE_LOW = 32,
+            GOAL_SEVEN_ALGAE_HIGH = 40,
+            GOAL_EIGHT_BARGE_SHOOT = 40;
 
     } 
 

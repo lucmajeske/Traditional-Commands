@@ -109,6 +109,6 @@ public class CANDriveSubsystem extends SubsystemBase {
     }
 
     public void driveTank(double leftSpeed, double rightSpeed) {
-        drive.tankDrive(leftSpeed, rightSpeed, true);
+        drive.tankDrive(0.8*leftSpeed, 0.8*rightSpeed, true);
     }
 }

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.CANArmSubsystem;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 
@@ -46,7 +47,7 @@ public class Robot extends TimedRobot {
         
        
         UsbCamera InsideHead = CameraServer.startAutomaticCapture();
-        InsideHead.setResolution(1280,720);
+        InsideHead.setResolution(640,480);
         InsideHead.setFPS(30);
         m_robotContainer = new RobotContainer();
         
@@ -90,8 +91,9 @@ public class Robot extends TimedRobot {
         }
 
         // Set arm/wrist to initially hold still;
-        m_robotContainer.armSubsystem.setArmGoal(m_robotContainer.armSubsystem.getCurrentArmPOS());
-        m_robotContainer.wristSubsystem.setWristGoal(m_robotContainer.wristSubsystem.getCurrentWristPOS());
+       
+        m_robotContainer.armSubsystem.setArmGoal(0);
+        m_robotContainer.wristSubsystem.setWristGoal(0);
     }
 
     @Override
@@ -104,9 +106,11 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
 
+        
+
         // Set arm/wrist to initially hold still;
-        m_robotContainer.armSubsystem.setArmGoal(m_robotContainer.armSubsystem.getCurrentArmPOS());
-        m_robotContainer.wristSubsystem.setWristGoal(m_robotContainer.wristSubsystem.getCurrentWristPOS());
+        m_robotContainer.armSubsystem.setArmGoal(0);
+        m_robotContainer.wristSubsystem.setWristGoal(0);
     }
 
     @Override

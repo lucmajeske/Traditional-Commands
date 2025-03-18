@@ -54,12 +54,11 @@ public class RobotContainer {
         // Set the options to show up in the Dashboard for selecting auto modes. If you
         // add additional auto modes you can add additional lines here with
         // autoChooser.addOption
-        autoChooser.setDefaultOption("Go Forward X", new DriveToLocationCommand(driveSubsystem, new Translation2d(1, 0)));
-        autoChooser.addOption("Move And Arm Out", new SequentialCommandGroup(
-            new DriveToLocationCommand(driveSubsystem, new Translation2d(1, 0)),
-            new InstantCommand(() -> wristSubsystem.setWristGoal(.25)),
-            new WaitUntilCommand(wristSubsystem.WristPID::atSetpoint)
-        ));
+        autoChooser.setDefaultOption("Go Forward X", new AutoCommand(driveSubsystem)); {
+            driveSubsystem.driveTank(0.25,0.25);
+
+        };
+      
         autoChooser.addOption("Autonomous", new AutoCommand(driveSubsystem));
     }
 

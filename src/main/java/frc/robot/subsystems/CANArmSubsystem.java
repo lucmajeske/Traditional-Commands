@@ -22,12 +22,12 @@ public class CANArmSubsystem extends SubsystemBase{
 
     // Set the arm encoder (connected to ArmHost)
     private final AbsoluteEncoder ArmInitial;
-    private double ArmHomeBase;
+    public double ArmHomeBase;
 
     private final PIDController ArmPID = new PIDController(ArmConstants.Arm_P, ArmConstants.Arm_I, ArmConstants.Arm_D);
 
     public CANArmSubsystem() {
-        ArmPID.setTolerance(0.000694);
+        ArmPID.setTolerance(0.1);
         // Initialize sensor for resetting encoder;
        
         // Initialize arm motors;
@@ -51,14 +51,16 @@ public class CANArmSubsystem extends SubsystemBase{
         ArmSlave.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         //sets the arm goal to where it currently sits, and passes that to the PID
-        ArmHomeBase = getCurrentArmPOS();
+        
         setArmGoal(0);
+            ArmHomeBase = getCurrentArmPOS();
+            SmartDashboard.putNumber("Arm Home Base", ArmHomeBase);
 
     }
     
     // finds and sets the setpont for your arm movement
     public void setArmGoal(double ArmGoal){
-        SmartDashboard.putNumber("Arm Position Demand", (ArmGoal + ArmHomeBase));
+        SmartDashboard.putNumber("Arm Position Demand", (ArmHomeBase + ArmGoal));
         ArmPID.setSetpoint(ArmGoal + ArmHomeBase);
     }
 
@@ -81,11 +83,12 @@ public class CANArmSubsystem extends SubsystemBase{
         // Put SmartDashboard entries;
         SmartDashboard.putNumber("NEO Volt",armVoltage);
         SmartDashboard.putNumber("High Arm POS", currentArmPOS);
-        SmartDashboard.putNumber("High Arm Power", -1*armPower);
+        SmartDashboard.putNumber("High Arm Power", armPower);
 
         // If the robot is enabled, write power to the arm;
         if (RobotState.isEnabled()){
-            ArmHost.set(-1*armPower);
+            ArmHost.set(-0.25*armPower);
+            
         } 
 
             

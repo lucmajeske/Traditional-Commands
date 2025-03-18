@@ -20,7 +20,7 @@ public final class CANWristSubsystem extends SubsystemBase {
     private final SparkMax WristHost;
     private final SparkMax WristSlave;
     public double WristHome;
-    private double WristHomeBase;
+    public double WristHomeBase;
 
     // create new encoder for wrist movement (connected to wrist host)
     private final SparkAbsoluteEncoder WristInitial;
@@ -31,7 +31,7 @@ public final class CANWristSubsystem extends SubsystemBase {
     
     // wrist subsystem constructor, runs on boot
     public CANWristSubsystem() {
-        WristPID.setTolerance(0.000694);
+        WristPID.setTolerance(2);
 
 
         //create motors for wrist movement
